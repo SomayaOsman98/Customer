@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "727154597948",
+    "project_id": "lnet-65102",
+    "storage_bucket": "lnet-65102.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:727154597948:android:40f45289c2ecc599996339",
+        "android_client_info": {
+          "package_name": "com.example.admin_lnet"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD78LuhpU7B6LL9eLTzY8XH7nWlBjFs6qQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:727154597948:android:77e76ddecb61daef996339",
+        "android_client_info": {
+          "package_name": "com.example.lnet"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD78LuhpU7B6LL9eLTzY8XH7nWlBjFs6qQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
