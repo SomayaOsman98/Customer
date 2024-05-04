@@ -1,12 +1,72 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
+import 'package:lnet/admin/pages/pack_page.dart';
 
-class CustomerData extends StatelessWidget {
-  const CustomerData({super.key});
+import '../auth/pages/login_page.dart';
+
+class CustomerData extends StatefulWidget {
+  final String userID;
+  const CustomerData({super.key, required this.userID});
+
+  @override
+  State<CustomerData> createState() => _CustomerDataState();
+}
+
+class _CustomerDataState extends State<CustomerData> {
+  Map<String, dynamic> customerData = {}; // تخزين بيانات الزبون
+
+  @override
+  void initState() {
+    super.initState();
+    fetchCustomerData(); // استعادة بيانات الزبون عند بدء تشغيل الواجهة
+  }
+  Future<void> fetchCustomerData() async {
+    try {
+      // Get the Firestore instance
+      FirebaseFirestore firestore = FirebaseFirestore.instance;
+
+      // Get the customer document using the provided userId
+      DocumentSnapshot documentSnapshot =
+      await firestore.collection('users').doc(widget.userID).get();
+
+      // Check if the document exists
+      if (documentSnapshot.exists) {
+        // Retrieve customer data from the document
+        setState(() {
+          customerData = documentSnapshot.data() as Map<String, dynamic>;
+          print('Package Type: ${customerData['package_type']}');
+        });
+      } else {
+        // Document does not exist
+        print('Customer document does not exist');
+      }
+    } catch (e) {
+      print('Error fetching customer data: $e');
+    }
+  }
+  // Sign out
+  Future<void> SignOut(BuildContext context) async {
+    // Sign out from Firebase
+    await FirebaseAuth.instance.signOut();
+
+    // Redirect the user to the login page
+    Navigator.pushAndRemoveUntil(
+      context,
+      MaterialPageRoute(builder: (context) => LoginPage()),
+          (route) => false,
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
     final height = MediaQuery.of(context).size.height * 0.59;
     final width = MediaQuery.of(context).size.width *0.55;
+    Map<String, dynamic> arguments = Get.arguments;
+    String userName = arguments['userName'];
+    String userID = arguments['userID'];
     return Scaffold(
       appBar: AppBar(
         toolbarHeight: 80,
@@ -21,8 +81,8 @@ class CustomerData extends StatelessWidget {
                   tooltip: 'الملف الشخصي',
                   onPressed: () {},
                 ),
-                const Text(
-                  'إسم المستخدم',
+                 Text(
+                  userName.toString(),
                   style: TextStyle(
                     fontSize: 14,
                     color: Color(0xffb50218),
@@ -42,57 +102,36 @@ class CustomerData extends StatelessWidget {
             ),
           ),
         ),
-        leading:  Container(
-          width: 40,
-          child: Align(
-            alignment: Alignment.centerLeft,
-            child: Text(
-              "LNET",
-              style: TextStyle(
-                fontWeight: FontWeight.w900,
-                fontSize: 20,
-                color: Color(0xffb50218),
+        leading: Padding(
+          padding: const EdgeInsets.only(right: 10.0),
+          child: Column(
+            children: [
+              IconButton(
+                icon: const Icon(
+                  Icons.exit_to_app_outlined,
+                  size: 40,
+                  color: Color(0xffb50218),
+                ),
+                tooltip: 'تسجيل خروج',
+                onPressed: () {
+                  SignOut(context);                 },
               ),
-            ),
-          )
+              const Text(
+                ' خروج',
+                style: TextStyle(
+                  fontSize: 14,
+                  color: Color(0xffb50218),
+                ),
+              ),
+            ],
+          ),
         ),
-      ),
+        ),
       backgroundColor: const Color(0xffb50218).withOpacity(0.7),
       body: SafeArea(
         child: Center(
           child: Column(
             children: [
-              // Container(
-              //   padding: EdgeInsets.only(top: 10),
-              //   width: MediaQuery.of(context).size.width*0.55,
-              //   height: 60,
-              //   child: Row(
-              //     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              //     children: [
-              //       ClipOval(
-              //         child: Image.asset(
-              //           "img/visa.jpeg",
-              //           width: 50,
-              //           height: 80,
-              //         ),
-              //       ),
-              //       ClipOval(
-              //         child: Image.asset(
-              //           "img/cach.jpeg",
-              //           width: 50,
-              //           height: 80,
-              //         ),
-              //       ),
-              //       ClipOval(
-              //         child: Image.asset(
-              //           "img/sidad.jpeg",
-              //           width: 50,
-              //           height: 50,
-              //         ),
-              //       ),
-              //     ],
-              //   ),
-              // ),
               Container( height: 40,),
               Container(
                 width: width,
@@ -128,7 +167,7 @@ class CustomerData extends StatelessWidget {
                                 child: Row(
                                   children: [
                                     Text(
-                                      'اسم المستخدم الثلاثي: محمد رمضان أحمد',
+                                      '  اسم المستخدم:${userName}  ',
                                       style: TextStyle(fontWeight: FontWeight.w800, fontSize: 18),
                                     ),
                                   ],
@@ -136,14 +175,15 @@ class CustomerData extends StatelessWidget {
                               ),
                               Row(
                                 children: [
-                                  Text('الباقة: WIFI Packages'),
+                                  Text('  الباقة:  ${customerData['package_type']}'),
+
                                 ],
                               ),
                               Padding(
                                 padding: EdgeInsets.only(top: 30),
                                 child: Row(
                                   children: [
-                                    Text('رقم العقد: 091880'),
+                                    Text(' رقم العقد:  ${customerData['number']}'),
                                   ],
                                 ),
                               ),
@@ -151,7 +191,7 @@ class CustomerData extends StatelessWidget {
                                 padding: EdgeInsets.only(top: 30),
                                 child: Row(
                                   children: [
-                                    Text('رصيد الباقة: 40GB'),
+                                    Text(' رصيد الباقة:   ${customerData['current_balance']}'),
                                   ],
                                 ),
                               ),
@@ -159,7 +199,7 @@ class CustomerData extends StatelessWidget {
                                 padding: EdgeInsets.only(top: 30),
                                 child: Row(
                                   children: [
-                                    Text('رقم الهاتف: 0910345670'),
+                                    Text(' رقم الهاتف: ${customerData['phone']}'),
                                   ],
                                 ),
                               ),
@@ -180,7 +220,7 @@ class CustomerData extends StatelessWidget {
                                 padding: EdgeInsets.only(top: 40),
                                 child: Row(
                                   children: [
-                                    Text('مكان السكن: وسط المدينة'),
+                                    Text(' مكان السكن: ${customerData['address']}'),
                                   ],
                                 ),
                               ),
@@ -188,7 +228,7 @@ class CustomerData extends StatelessWidget {
                                 padding: EdgeInsets.only(top: 30),
                                 child: Row(
                                   children: [
-                                    Text('المدينة: مصراتة'),
+                                    Text('  المدينة: ${customerData['city']}'),
                                   ],
                                 ),
                               ),
@@ -196,7 +236,7 @@ class CustomerData extends StatelessWidget {
                                 padding: EdgeInsets.only(top: 30),
                                 child: Row(
                                   children: [
-                                    Text('طريقة الدفع: سداد'),
+                                    Text(' طريقة الدفع: ${customerData['payment_method']}'),
                                   ],
                                 ),
                               ),
@@ -204,7 +244,7 @@ class CustomerData extends StatelessWidget {
                                 padding: EdgeInsets.only(top: 30),
                                 child: Row(
                                   children: [
-                                    Text('تاريخ الإنتهاء: 24/06/2024'),
+                                    Text(' تاريخ الإنتهاء:${customerData['expiration_date']}'),
                                   ],
                                 ),
                               ),
@@ -259,12 +299,12 @@ class CustomerData extends StatelessWidget {
                     context: context,
                     builder: (BuildContext context) {
                       return AlertDialog(
-                        title: Text('إضافة عرض'),
+                        title: Text('تعبئة رصيد'),
                         content: Container(
                            width: MediaQuery.of(context).size.width * 0.35, // تعيين العرض الأفقي للديالوج
-                          // height: MediaQuery.of(context).size.height * 0.60, // تعيين الارتفاع العمودي للديالوج
-                          height: MediaQuery.of(context).size.height * 0.35,
-                          child: Text(""),
+                           height: MediaQuery.of(context).size.height * 0.60, // تعيين الارتفاع العمودي للديالوج
+                         // height: MediaQuery.of(context).size.height * 0.35,
+                          child: PackPage(userID: userID,),
                         ),
                       actions: [
                           TextButton(

@@ -69,7 +69,7 @@ class TestPage extends StatelessWidget {
                             password: passwordController.text,
                           );
                           if (userCredential.user != null) {
-                            Get.off(CustomerData());
+                            Get.off(CustomerData(userID: '',));
                           } else {
                             Get.snackbar(
                               "Error",

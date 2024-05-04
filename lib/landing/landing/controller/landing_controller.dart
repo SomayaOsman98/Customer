@@ -1,7 +1,10 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
 import 'package:lnet/ui/customer_data.dart';
-import '../../auth/pages/login_page.dart';
+
+import '../../../auth/pages/login_page.dart';
+import '../../../storage.dart';
+
 class LandingController extends GetxController {
 
 
@@ -9,9 +12,8 @@ class LandingController extends GetxController {
   checkLogin()
   async {
    await Future.delayed(const Duration(seconds: 2));
-    var user = FirebaseAuth.instance.currentUser;
 
-    if(user == null)
+    if(storage.read('phone') == null)
       {
         Get.to(LoginPage());
       }

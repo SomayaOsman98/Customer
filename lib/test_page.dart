@@ -49,7 +49,7 @@ class _TestPageState extends State<TestPage> {
       // التحقق من نجاح عملية تسجيل الدخول
       if (userCredential != null) {
         print('تم تسجيل الدخول بنجاح: ${userCredential.user!.uid}');
-        Get.to(CustomerData());
+        Get.to(CustomerData(userID: '',));
       } else {
         print('لا يمكن تسجيل الدخول');
       }

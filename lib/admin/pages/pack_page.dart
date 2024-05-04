@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
+import 'package:lnet/admin/pages/top_page.dart';
 
 class PackPage extends StatelessWidget {
-  const PackPage({super.key});
-
+  String pack=' ';
+  String userID='';
+   PackPage({super.key, required this.userID});
   @override
   Widget build(BuildContext context) {
     return  Scaffold(
@@ -18,7 +22,9 @@ class PackPage extends StatelessWidget {
                   borderRadius: BorderRadius.circular(8),
                   child: InkWell(
                     onTap: () {
-                      // يتم تنفيذ الكود المطلوب عند الضغط على المربع
+                      pack='WIFI Packages';
+                      print(pack);
+                      Get.to(() => TopPage(userID: userID, pack: pack));
                     },
                     child: Padding(
                       padding: EdgeInsets.all(16),
@@ -47,6 +53,9 @@ class PackPage extends StatelessWidget {
                   child: InkWell(
                     onTap: () {
                       // يتم تنفيذ الكود المطلوب عند الضغط على المربع
+                       pack='Business Unlimited';
+                       print(pack);
+                       Get.to(() => TopPage(userID: userID, pack: pack));
                     },
                     child: Padding(
                       padding: EdgeInsets.all(16),
@@ -74,7 +83,13 @@ class PackPage extends StatelessWidget {
                   borderRadius: BorderRadius.circular(8),
                   child: InkWell(
                     onTap: () {
+                      pack='Home Unlimited';
+                      print(pack);
                       // يتم تنفيذ الكود المطلوب عند الضغط على المربع
+                      Get.to(() => TopPage(userID: userID, pack: pack));
+
+
+
                     },
                     child: Padding(
                       padding: EdgeInsets.all(16),
@@ -111,6 +126,10 @@ class PackPage extends StatelessWidget {
                   child: InkWell(
                     onTap: () {
                       // يتم تنفيذ الكود المطلوب عند الضغط على المربع
+                       pack='Gamer Packages';
+                       print(pack);
+                       Get.to(() => TopPage(userID: userID, pack: pack));
+
                     },
                     child: Padding(
                       padding: EdgeInsets.all(16),
@@ -133,12 +152,15 @@ class PackPage extends StatelessWidget {
                     ),
                   ),
                 ),
+
                 Material(
                   color: Color(0xfff3f3f3),
                   borderRadius: BorderRadius.circular(8),
                   child: InkWell(
                     onTap: () {
-                      // يتم تنفيذ الكود المطلوب عند الضغط على المربع
+                      pack='ADSL Packages';
+                      print(pack);
+                      Get.to(() => TopPage(userID: userID, pack: pack));
                     },
                     child: Padding(
                       padding: EdgeInsets.all(16),
